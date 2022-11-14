@@ -32,9 +32,10 @@ export class App extends Component {
         });
       }
       if (
+
         prevState.selectedPage !== this.state.selectedPage &&
         this.state.selectedPage !== 1
-      ) {
+      ) {debugger
         this.setState(({ isLoading }) => ({ isLoading: !isLoading }));
         console.log('is working');
         const imgArray = await getImages(this.state.searchName, selectedPage);
