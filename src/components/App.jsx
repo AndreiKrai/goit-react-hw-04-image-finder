@@ -20,7 +20,7 @@ export class App extends Component {
 
   async componentDidUpdate(prevProps, prevState) {
     const { selectedPage } = this.state;
-
+    console.log(prevState.selectedPage, this.state.selectedPage);
     try {
       if (prevState.searchName !== this.state.searchName) {
         this.setState(({ isLoading }) => ({ isLoading: !isLoading }));
@@ -65,7 +65,7 @@ export class App extends Component {
 
   addMorePictures = () => {
     this.setState(prevState => ({
-      selectedPage: (prevState.selectedPage += 1),
+      selectedPage: (prevState.selectedPage + 1),
     }));
   };
 
