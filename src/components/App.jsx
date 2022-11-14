@@ -19,31 +19,38 @@ export class App extends Component {
   };
 
   async componentDidUpdate(prevProps, prevState) {
-    const{selectedPage}=this.state
+    const { selectedPage } = this.state;
 
     try {
-      if (prevState.searchName !== this.state.searchName) {    
-      this.setState(({ isLoading }) => ({ isLoading: !isLoading }))
-
+      if (prevState.searchName !== this.state.searchName) {
+        this.setState(({ isLoading }) => ({ isLoading: !isLoading }));
         const imgArray = await getImages(this.state.searchName);
-        this.setState({ imgFromAPI: imgArray,selectedPage:1,isLoading:false });
+        this.setState({
+          imgFromAPI: imgArray,
+          selectedPage: 1,
+          isLoading: false,
+        });
       }
-      if(prevState.selectedPage !== this.state.selectedPage && this.state.selectedPage !==1){
-        this.setState(({ isLoading }) => ({ isLoading: !isLoading }))
-
-        const imgArray = await getImages(this.state.searchName,selectedPage);
-        this.setState(prevState=>({ imgFromAPI: [...prevState.imgFromAPI,...imgArray],isLoading:false}) )
-
+      if (
+        prevState.selectedPage !== this.state.selectedPage &&
+        this.state.selectedPage !== 1
+      ) {
+        this.setState(({ isLoading }) => ({ isLoading: !isLoading }));
+        console.log('is working');
+        const imgArray = await getImages(this.state.searchName, selectedPage);
+        this.setState(prevState => ({
+          imgFromAPI: [...prevState.imgFromAPI, ...imgArray],
+          isLoading: false,
+        }));
       }
-      }
-     catch {
+    } catch {
       this.setState({ isError: true });
       this.setState({ isLoading: false });
     }
   }
 
   handleSearch = searchName => {
-    // console.log(searchName);
+
     this.setState({ searchName: searchName });
   };
 
@@ -55,20 +62,15 @@ export class App extends Component {
   };
   // getActivePicture=()=>{return this.state.imgFromAPI.find(picture=>{return picture.id===this.state.selectedPicture})}
 
-  addMorePictures = () => {this.setState
-    (prevState => ({
-      selectedPage: prevState.selectedPage += 1
-    }))
+  addMorePictures = () => {
+    this.setState(prevState => ({
+      selectedPage: (prevState.selectedPage += 1),
+    }));
   };
 
   render() {
-    const {
-      isError,
-      isLoading,
-      selectedPicture,
-      imgFromAPI,
-      isOpenModal,
-    } = this.state;
+    const { isError, isLoading, selectedPicture, imgFromAPI, isOpenModal } =
+      this.state;
     return (
       <div className="App">
         <Searchbar onSubmitSearch={this.handleSearch} />
