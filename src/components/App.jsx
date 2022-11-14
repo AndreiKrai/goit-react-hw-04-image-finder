@@ -20,19 +20,20 @@ export class App extends Component {
 
   async componentDidUpdate(prevProps, prevState) {
     const{selectedPage}=this.state
-    this.setState({ isLoading: true });
+
     try {
-      if (prevState.searchName !== this.state.searchName) {
+      if (prevState.searchName !== this.state.searchName) {    
+      this.setState(({ isLoading }) => ({ isLoading: !isLoading }))
+
         const imgArray = await getImages(this.state.searchName);
-        this.setState({ imgFromAPI: imgArray,selectedPage:1 });
-      }
-      if (prevState.isLoading !== this.state.isLoading) {
-        this.setState({ isLoading: false });
+        this.setState({ imgFromAPI: imgArray,selectedPage:1,isLoading:false });
       }
       if(prevState.selectedPage !== this.state.selectedPage && this.state.selectedPage !==1){
+        this.setState(({ isLoading }) => ({ isLoading: !isLoading }))
+
         const imgArray = await getImages(this.state.searchName,selectedPage);
-        this.setState(prevState=>({ imgFromAPI: [...prevState.imgFromAPI,...imgArray],isLoading: false}) )
-        // this.setState({ isLoading: false })
+        this.setState(prevState=>({ imgFromAPI: [...prevState.imgFromAPI,...imgArray],isLoading:false}) )
+
       }
       }
      catch {
