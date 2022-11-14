@@ -29,8 +29,8 @@ export class App extends Component {
         this.setState({ imgFromAPI: imgArray,selectedPage:1,isLoading:false });
       }
       if(prevState.selectedPage !== this.state.selectedPage && this.state.selectedPage !==1){
-        this.setState(({ isLoading }) => ({ isLoading: !isLoading }))
-
+        this.setState(({ isLoading }) => ({ isLoading: !isLoading }));
+console.log('is working');
         const imgArray = await getImages(this.state.searchName,selectedPage);
         this.setState(prevState=>({ imgFromAPI: [...prevState.imgFromAPI,...imgArray],isLoading:false}) )
 
