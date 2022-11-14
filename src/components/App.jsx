@@ -20,7 +20,6 @@ export class App extends Component {
 
   async componentDidUpdate(prevProps, prevState) {
     const { selectedPage } = this.state;
-    console.log(prevState.selectedPage, this.state.selectedPage);
     try {
       if (prevState.searchName !== this.state.searchName) {
         this.setState(({ isLoading }) => ({ isLoading: !isLoading }));
@@ -32,12 +31,10 @@ export class App extends Component {
         });
       }
       if (
-
         prevState.selectedPage !== this.state.selectedPage &&
         this.state.selectedPage !== 1
-      ) {debugger
+      ) {
         this.setState(({ isLoading }) => ({ isLoading: !isLoading }));
-        console.log('is working');
         const imgArray = await getImages(this.state.searchName, selectedPage);
         this.setState(prevState => ({
           imgFromAPI: [...prevState.imgFromAPI, ...imgArray],
@@ -51,7 +48,6 @@ export class App extends Component {
   }
 
   handleSearch = searchName => {
-
     this.setState({ searchName: searchName });
   };
 
@@ -61,11 +57,10 @@ export class App extends Component {
       selectedPicture: URL,
     }));
   };
-  // getActivePicture=()=>{return this.state.imgFromAPI.find(picture=>{return picture.id===this.state.selectedPicture})}
 
   addMorePictures = () => {
     this.setState(prevState => ({
-      selectedPage: (prevState.selectedPage + 1),
+      selectedPage: prevState.selectedPage + 1,
     }));
   };
 
