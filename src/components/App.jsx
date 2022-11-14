@@ -66,7 +66,6 @@ export class App extends Component {
       isError,
       isLoading,
       selectedPicture,
-      searchName,
       imgFromAPI,
       isOpenModal,
     } = this.state;
