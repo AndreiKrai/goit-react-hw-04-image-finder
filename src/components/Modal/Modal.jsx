@@ -14,7 +14,7 @@ export class Modal extends Component {
     return (
       <div className="Overlay" onClick={togleModal}>
         <div className="Modal">
-          <img src={pictureData} alt='PO' />
+          <img src={pictureData} alt='ssss' />
         </div>
       </div>
     );

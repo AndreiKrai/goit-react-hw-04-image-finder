@@ -61,29 +61,22 @@ export class App extends Component {
       selectedPicture: URL,
     }));
   };
-  // getActivePicture=()=>{return this.state.imgFromAPI.find(picture=>{return picture.id===this.state.selectedPicture})}
 
   addMorePictures = () => {
     this.setState(prevState => ({
-      selectedPage: (prevState.selectedPage += 1),
+      selectedPage: prevState.selectedPage + 1,
     }));
   };
 
   render() {
-    const {
-      isError,
-      isLoading,
-      selectedPicture,
-      searchName,
-      imgFromAPI,
-      isOpenModal,
-    } = this.state;
+    const { isError, isLoading, selectedPicture, imgFromAPI, isOpenModal } =
+      this.state;
     return (
       <div className="App">
         <Searchbar
           onChange={this.handleChange}
           onSubmitSearch={this.handleSubmit}
-          search={searchName}
+          search={this.state.searchName}
         />
         {isError && <ApiError />}
         <ImageGallery
