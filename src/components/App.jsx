@@ -30,7 +30,6 @@ export class App extends Component {
         const imgArray = await getImages(searchName, selectedPage);
         this.setState(prevState => ({
           imgFromAPI: [...prevState.imgFromAPI, ...imgArray],
-          isLoading: false,
         }));
       }
 
