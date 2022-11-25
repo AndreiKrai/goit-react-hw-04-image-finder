@@ -6,6 +6,7 @@ import { Modal } from './Modal/Modal';
 import Button from './Button/Button';
 import { RotatingLines } from 'react-loader-spinner';
 import ApiError from './ApiError/ApiError';
+import { simplifyObj } from 'helpers/simplifyObj';
 
 export class App extends Component {
   state = {
@@ -21,19 +22,28 @@ export class App extends Component {
   async componentDidUpdate(prevProps, prevState) {
     const {searchName, selectedPage } = this.state;
     try {
+      if (prevState.searchName !== searchName) {
+        this.setState(({ isLoading }) => ({ isLoading: !isLoading }));
+        const imgArray =  simplifyObj(await getImages(searchName));
+        this.setState({
+          imgFromAPI: imgArray,
+          selectedPage: 1,
+          isLoading: false,
+        });
+      }
       if (
        ( prevState.selectedPage !== selectedPage &&
         this.state.selectedPage !== 1)|| prevState.searchName !== searchName
       ) {
-        this.setState({ isLoading: true });
-
-        const imgArray = await getImages(searchName, selectedPage);
+        this.setState(({ isLoading }) => ({ isLoading: !isLoading }));
+        const imgArray =  simplifyObj(await getImages(this.state.searchName, selectedPage));
         this.setState(prevState => ({
           imgFromAPI: [...prevState.imgFromAPI, ...imgArray],
         }));
       }
-
-    } catch {
+    } catch(e) {
+      console.log(e);
+      this.setState({ isError: true });
       this.setState({ isLoading: false });
     }
     finally{this.setState({isLoading: false } )}
