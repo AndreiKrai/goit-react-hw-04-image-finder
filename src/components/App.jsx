@@ -19,23 +19,25 @@ export class App extends Component {
   };
 
   async componentDidUpdate(prevProps, prevState) {
-    const { selectedPage } = this.state;
+    const {searchName, selectedPage } = this.state;
     try {
       if (
-        prevState.selectedPage !== this.state.selectedPage &&
-        this.state.selectedPage !== 1
+       ( prevState.selectedPage !== selectedPage &&
+        this.state.selectedPage !== 1)|| prevState.searchName !== searchName
       ) {
         this.setState({ isLoading: true });
 
-        const imgArray = await getImages(this.state.searchName, selectedPage);
+        const imgArray = await getImages(searchName, selectedPage);
         this.setState(prevState => ({
           imgFromAPI: [...prevState.imgFromAPI, ...imgArray],
           isLoading: false,
         }));
       }
+
     } catch {
       this.setState({ isLoading: false });
     }
+    finally{this.setState({isLoading: false } )}
   }
 
   handleChange = e => {
@@ -46,11 +48,11 @@ export class App extends Component {
   handleSubmit = async e => {
     const { searchName } = this.state;
     e.preventDefault();
-    const imgArray = await getImages(searchName);
+    
     this.setState({
-      imgFromAPI: imgArray,
+     
       selectedPage: 1,
-      isLoading: false,
+      
     });
      };
   //  handleSubmit=e=>this.setState({searchName:e.target.value})
