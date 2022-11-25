@@ -1,10 +1,8 @@
-import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ImageGalleryItem from 'components/ImageGalleryItem/ImageGalleryItem';
 
-export class ImageGallery extends Component {
-  render() {
-    const { imgFromAPI,togleModal } = this.props;
+export const ImageGallery=({imgFromAPI,togleModal})=>{
+
 
     return (
       <ul className="ImageGallery">
@@ -21,7 +19,7 @@ export class ImageGallery extends Component {
       </ul>
     );
   }
-}
+
 
 ImageGallery.propTypes = {
   imgFromAPI: PropTypes.arrayOf(

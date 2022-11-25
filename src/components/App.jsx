@@ -19,32 +19,41 @@ export class App extends Component {
   };
 
   async componentDidUpdate(prevProps, prevState) {
-    const{selectedPage}=this.state
-    this.setState({ isLoading: true });
+    const { selectedPage } = this.state;
     try {
-      if (prevState.searchName !== this.state.searchName) {
-        const imgArray = await getImages(this.state.searchName);
-        this.setState({ imgFromAPI: imgArray,selectedPage:1 });
+      if (
+        prevState.selectedPage !== this.state.selectedPage &&
+        this.state.selectedPage !== 1
+      ) {
+        this.setState({ isLoading: true });
+
+        const imgArray = await getImages(this.state.searchName, selectedPage);
+        this.setState(prevState => ({
+          imgFromAPI: [...prevState.imgFromAPI, ...imgArray],
+          isLoading: false,
+        }));
       }
-      if (prevState.isLoading !== this.state.isLoading) {
-        this.setState({ isLoading: false });
-      }
-      if(prevState.selectedPage !== this.state.selectedPage && this.state.selectedPage !==1){
-        const imgArray = await getImages(this.state.searchName,selectedPage);
-        this.setState(prevState=>({ imgFromAPI: [...prevState.imgFromAPI,...imgArray],isLoading: false}) )
-        // this.setState({ isLoading: false })
-      }
-      }
-     catch {
-      this.setState({ isError: true });
+    } catch {
       this.setState({ isLoading: false });
     }
   }
 
-  handleSearch = searchName => {
-    // console.log(searchName);
-    this.setState({ searchName: searchName });
+  handleChange = e => {
+    const { name, value } = e.target;
+    this.setState({ [name]: value.toLowerCase() });
   };
+
+  handleSubmit = async e => {
+    const { searchName } = this.state;
+    e.preventDefault();
+    const imgArray = await getImages(searchName);
+    this.setState({
+      imgFromAPI: imgArray,
+      selectedPage: 1,
+      isLoading: false,
+    });
+     };
+  //  handleSubmit=e=>this.setState({searchName:e.target.value})
 
   togleModal = URL => {
     this.setState(prevState => ({
@@ -54,10 +63,10 @@ export class App extends Component {
   };
   // getActivePicture=()=>{return this.state.imgFromAPI.find(picture=>{return picture.id===this.state.selectedPicture})}
 
-  addMorePictures = () => {this.setState
-    (prevState => ({
-      selectedPage: prevState.selectedPage += 1
-    }))
+  addMorePictures = () => {
+    this.setState(prevState => ({
+      selectedPage: (prevState.selectedPage += 1),
+    }));
   };
 
   render() {
@@ -71,22 +80,29 @@ export class App extends Component {
     } = this.state;
     return (
       <div className="App">
-        <Searchbar onSubmitSearch={this.handleSearch} />
-        {isLoading && (
+        <Searchbar
+          onChange={this.handleChange}
+          onSubmitSearch={this.handleSubmit}
+          search={searchName}
+        />
+        {isError && <ApiError />}
+        <ImageGallery
+          imgFromAPI={imgFromAPI}
+          togleModal={this.togleModal}
+        />
+        
           <RotatingLines
             strokeColor="grey"
             strokeWidth="5"
             animationDuration="0.75"
             width="96"
-            visible={true}
+            visible={this.state.isLoading}
           />
-        )}
-        {isError && <ApiError />}
-        <ImageGallery imgFromAPI={imgFromAPI} togleModal={this.togleModal} />
+        
         {isOpenModal && (
           <Modal togleModal={this.togleModal} pictureData={selectedPicture} />
         )}
-        {this.state.selectedPage > 0 && (
+        {this.state.selectedPage > 0 && !isLoading && (
           <Button addMorePictures={this.addMorePictures} />
         )}{' '}
       </div>
