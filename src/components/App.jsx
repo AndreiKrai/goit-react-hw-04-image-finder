@@ -32,13 +32,14 @@ export class App extends Component {
         });
       }
       if (
-       ( prevState.selectedPage !== selectedPage &&
-        this.state.selectedPage !== 1)|| prevState.searchName !== searchName
+        prevState.selectedPage !== this.state.selectedPage &&
+        this.state.selectedPage !== 1
       ) {
         this.setState(({ isLoading }) => ({ isLoading: !isLoading }));
         const imgArray =  simplifyObj(await getImages(this.state.searchName, selectedPage));
         this.setState(prevState => ({
           imgFromAPI: [...prevState.imgFromAPI, ...imgArray],
+          isLoading: false,
         }));
       }
     } catch(e) {
@@ -46,25 +47,11 @@ export class App extends Component {
       this.setState({ isError: true });
       this.setState({ isLoading: false });
     }
-    finally{this.setState({isLoading: false } )}
   }
 
-  handleChange = e => {
-    const { name, value } = e.target;
-    this.setState({ [name]: value.toLowerCase() });
+  handleSearch = searchName => {
+    this.setState({ searchName: searchName });
   };
-
-  handleSubmit = async e => {
-    const { searchName } = this.state;
-    e.preventDefault();
-    
-    this.setState({
-     
-      selectedPage: 1,
-      
-    });
-     };
-  //  handleSubmit=e=>this.setState({searchName:e.target.value})
 
   togleModal = URL => {
     this.setState(prevState => ({
@@ -84,31 +71,24 @@ export class App extends Component {
       this.state;
     return (
       <div className="App">
-        <Searchbar
-          onChange={this.handleChange}
-          onSubmitSearch={this.handleSubmit}
-          search={this.state.searchName}
-        />
-        {isError && <ApiError />}
-        <ImageGallery
-          imgFromAPI={imgFromAPI}
-          togleModal={this.togleModal}
-        />
-        
+        <Searchbar onSubmitSearch={this.handleSearch} />
+        {isLoading && (
           <RotatingLines
             strokeColor="grey"
             strokeWidth="5"
             animationDuration="0.75"
             width="96"
-            visible={this.state.isLoading}
+            visible={true}
           />
-        
+        )}
+        {isError && <ApiError />}
+        <ImageGallery imgFromAPI={imgFromAPI} togleModal={this.togleModal} />
         {isOpenModal && (
           <Modal togleModal={this.togleModal} pictureData={selectedPicture} />
         )}
-        {this.state.selectedPage > 0 && !isLoading && (
+        {this.state.selectedPage > 0 && (
           <Button addMorePictures={this.addMorePictures} />
-        )}{' '}
+        )}
       </div>
     );
   }
