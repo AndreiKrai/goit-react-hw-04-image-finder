@@ -28,26 +28,12 @@ export const App = () => {
   //   isError: false,
   // };
 
-  useEffect(() => {
-    const updateImgFromApi = async (searchName = '', selectedPage = 1) => {
-      try {
-        setIsLoading(true);
-        const imgArray = simplifyObj(await fetchImages(searchName,selectedPage));
-        setImgFromAPI([...imgFromAPI, ...imgArray]);
-        setSelectedPage(1);
-      } catch (e) {
-        console.log(e);
-        setIsError(true);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    
+  useEffect(() => {    
     if(searchName.length || selectedPage>1){
       console.log(searchName);
     updateImgFromApi(searchName)}
     else{return};
-  }, [searchName,selectedPage,imgFromAPI]);
+  }, [searchName,selectedPage]);
 
   // useEffect(() => {
   //   if (!selectedPage <= 1) {
@@ -57,7 +43,19 @@ export const App = () => {
   //   }
   // }, [selectedPage]);
 
- 
+  const updateImgFromApi = async (searchName, selectedPage) => {
+    try {
+      setIsLoading(true);
+      const imgArray = simplifyObj(await fetchImages(searchName,selectedPage));
+      setImgFromAPI([...imgFromAPI, ...imgArray]);
+      setSelectedPage(1);
+    } catch (e) {
+      console.log(e);
+      setIsError(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   // async componentDidUpdate(prevProps, prevState) {
   //   const {searchName, selectedPage } = this.state;
